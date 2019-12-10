@@ -1,0 +1,7 @@
+image: pkunzli/debian-algo
+
+test:
+
+  script:
+    - make test
+
