@@ -105,7 +105,7 @@ void test_vector_pop(){
     v2.length = 5;
     v2.capacity = 5;
 
-    int element;
+    type element;
     vector_pop(&v2, &element);
     CU_ASSERT(element == 5);
     CU_ASSERT(vector_is_equal(&v1, &v2));
@@ -142,7 +142,7 @@ void test_vector_get(){
     vector_push(&v, 2);
     vector_push(&v, 3);
 
-    int element;
+    type element;
     CU_ASSERT(vector_get(&v, 3, &element) == out_of_bounds);
     vector_get(&v, 2, &element);
     CU_ASSERT(element == 3);
@@ -207,10 +207,50 @@ void test_vector_free(){
     CU_ASSERT(v.content == NULL && v.length == 0 && v.capacity == 0);
 }
 
-// void test_vector_map(){
+void test_vector_map(){
 
-// }
+    vector v, v2;
+    vector_init(&v);
+    vector_push(&v, 1);
+    vector_push(&v, 2);
+    vector_push(&v, 3);
+    vector_push(&v, 4);
+    vector_map(&v, &square, &v2);
 
-// void test_vector_filter(){
+    CU_ASSERT(v.length == v2.length);
+    for(int i=0; i<v.length; i++){
+        type element, element2;
+        vector_get(&v, i, &element);
+        vector_get(&v2, i, &element2);
+        CU_ASSERT(element2 == element*element);
+    }
 
-// }
+    vector_free(&v);
+    vector_free(&v2);
+}
+
+void test_vector_filter(){
+    vector v, v2, vtest;
+    vector_init(&v);
+    vector_init(&vtest);
+
+    vector_push(&v, 1);
+    vector_push(&v, 2);
+    vector_push(&v, 16);
+    vector_push(&v, 11);
+    vector_push(&v, 13);
+    vector_push(&v, 100);
+    vector_push(&v, 1);
+
+    vector_push(&vtest, 2);
+    vector_push(&vtest, 16);
+    vector_push(&vtest, 100);
+
+    vector_filter(&v, &is_even, &v2);
+
+    CU_ASSERT(vector_is_equal(&v2, &vtest));
+
+    vector_free(&v);
+    vector_free(&v2);
+    vector_free(&vtest);
+}

@@ -47,3 +47,19 @@ error_code vector_free(vector *v) {
 void vector_print_int(vector *v) {
     return ok;
 }
+
+error_code vector_map(vector *v, type  (*f)(type), vector *rhs) {
+    return ok;
+}
+
+error_code vector_filter(vector *v, bool  (*f)(type), vector *rhs) {
+    return ok;
+}
+
+type square(type element){
+    return 1;
+}
+
+bool is_even(type element){
+    return false;
+}
