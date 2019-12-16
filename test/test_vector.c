@@ -1,5 +1,7 @@
 #include "test_vector.h"
 #include "../vector.h"
+#include "../map_functions.h"
+#include "../filter_functions.h"
 #include "stdlib.h"
 #include "CUnit/Basic.h"
 #include "CUnit/Automated.h"
@@ -59,13 +61,16 @@ void test_vector_length(){
     vector_push(&v, 1);
     vector_push(&v, 1);
 
-    vector_length(&v, &length);
+    CU_ASSERT(vector_length(&v, &length) == ok);
     CU_ASSERT(length == 3);
     vector_free(&v);
 }
 
 void test_vector_push(){
     vector v1, v2;
+
+    v1 = create_uninitialized_vector();
+    CU_ASSERT(vector_push(&v1, 1) == uninitialized);
     v1.content = malloc(4*sizeof(int));
     v1.content[0] = 1;
     v1.content[1] = 2;
@@ -74,11 +79,12 @@ void test_vector_push(){
     v1.length = 4;
     v1.capacity = 4;
 
+
     vector_init(&v2);
-    vector_push(&v2, 1);
-    vector_push(&v2, 2);
-    vector_push(&v2, 3);
-    vector_push(&v2, 4);
+    CU_ASSERT(vector_push(&v2, 1) == ok);
+    CU_ASSERT(vector_push(&v2, 2) == ok);
+    CU_ASSERT(vector_push(&v2, 3) == ok);
+    CU_ASSERT(vector_push(&v2, 4) == ok);
 
     CU_ASSERT(vector_is_equal(&v1, &v2));
     free(v1.content);
@@ -87,6 +93,13 @@ void test_vector_push(){
 
 void test_vector_pop(){
     vector v1, v2;
+    type element;
+
+    v1 = create_uninitialized_vector();
+    CU_ASSERT(vector_pop(&v1, &element) == uninitialized)
+    vector_init(&v1);
+    CU_ASSERT(vector_pop(&v1, &element) == out_of_bounds);
+    free(v1.content);
 
     v1.content = malloc(4*sizeof(int));
     v1.content[0] = 1;
@@ -105,8 +118,8 @@ void test_vector_pop(){
     v2.length = 5;
     v2.capacity = 5;
 
-    type element;
-    vector_pop(&v2, &element);
+
+    CU_ASSERT(vector_pop(&v2, &element) == ok);
     CU_ASSERT(element == 5);
     CU_ASSERT(vector_is_equal(&v1, &v2));
     free(v1.content);
@@ -127,7 +140,7 @@ void test_vector_set(){
     vector_push(&v2, 1);
     vector_push(&v2, 2);
     vector_push(&v2, 1);
-    vector_set(&v1, 1, 2);
+    CU_ASSERT(vector_set(&v1, 1, 2) == ok);
 
     CU_ASSERT(vector_is_equal(&v1, &v2));
     vector_free(&v1);
@@ -136,21 +149,24 @@ void test_vector_set(){
 
 void test_vector_get(){
     vector v;
+    type element;
     vector_init(&v);
 
     vector_push(&v, 1);
     vector_push(&v, 2);
     vector_push(&v, 3);
 
-    type element;
     CU_ASSERT(vector_get(&v, 3, &element) == out_of_bounds);
-    vector_get(&v, 2, &element);
+    CU_ASSERT(vector_get(&v, 2, &element) == ok);
     CU_ASSERT(element == 3);
     vector_free(&v);
 }
 
 void test_vector_remove(){
     vector v1, v2;
+    v1 = create_uninitialized_vector();
+    CU_ASSERT(vector_remove(&v1, 0) == uninitialized);
+
     vector_init(&v1);
     vector_init(&v2);
     CU_ASSERT(vector_remove(&v1, 1) == out_of_bounds);
@@ -161,7 +177,7 @@ void test_vector_remove(){
 
     vector_push(&v2, 1);
     vector_push(&v2, 3);
-    vector_remove(&v1, 1);
+    CU_ASSERT(vector_remove(&v1, 1) == ok);
 
     CU_ASSERT(vector_is_equal(&v1, &v2));
     vector_free(&v1);
@@ -170,6 +186,9 @@ void test_vector_remove(){
 
 void test_vector_insert(){
     vector v1, v2;
+    v1 = create_uninitialized_vector();
+    CU_ASSERT(vector_insert(&v1, 2, 2) == uninitialized);
+
     vector_init(&v1);
     vector_init(&v2);
     CU_ASSERT(vector_insert(&v1, 2, 2) == out_of_bounds);
@@ -183,7 +202,7 @@ void test_vector_insert(){
     vector_push(&v2, 1);
     vector_push(&v2, 1);
 
-    vector_insert(&v1, 2, 1);
+    CU_ASSERT(vector_insert(&v1, 2, 1) == ok);
 
     CU_ASSERT(vector_is_equal(&v1, &v2));
     vector_free(&v1);
@@ -194,28 +213,33 @@ void test_vector_empty(){
     vector v;
     vector_init(&v);
     vector_push(&v, 1);
-    vector_empty(&v);
+    CU_ASSERT(vector_empty(&v) == ok);
     CU_ASSERT(v.length == 0);
     vector_free(&v);
 }
 
 void test_vector_free(){
     vector v;
+    v = create_uninitialized_vector();
+    CU_ASSERT(vector_free(&v) == uninitialized);
     vector_init(&v);
     vector_push(&v, 1);
-    vector_free(&v);
+    CU_ASSERT(vector_free(&v) == ok);
     CU_ASSERT(v.content == NULL && v.length == 0 && v.capacity == 0);
 }
 
 void test_vector_map(){
 
     vector v, v2;
+    v = create_uninitialized_vector();
+    CU_ASSERT(vector_map(&v, &square, &v2) == uninitialized);
+
     vector_init(&v);
     vector_push(&v, 1);
     vector_push(&v, 2);
     vector_push(&v, 3);
     vector_push(&v, 4);
-    vector_map(&v, &square, &v2);
+    CU_ASSERT(vector_map(&v, &square, &v2) == ok);
 
     CU_ASSERT(v.length == v2.length);
     for(int i=0; i<v.length; i++){
@@ -231,6 +255,9 @@ void test_vector_map(){
 
 void test_vector_filter(){
     vector v, v2, vtest;
+    v = create_uninitialized_vector();
+    CU_ASSERT(vector_filter(&v, &is_even, &v2) == uninitialized);
+
     vector_init(&v);
     vector_init(&vtest);
 
@@ -246,7 +273,7 @@ void test_vector_filter(){
     vector_push(&vtest, 16);
     vector_push(&vtest, 100);
 
-    vector_filter(&v, &is_even, &v2);
+    CU_ASSERT(vector_filter(&v, &is_even, &v2) == ok);
 
     CU_ASSERT(vector_is_equal(&v2, &vtest));
 

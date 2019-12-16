@@ -49,6 +49,7 @@ int main() {
 
     if ((NULL == CU_add_test(vector_suite, "test of vector_init", test_vector_init)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_is_equal", test_vector_is_equal)) ||
+        (NULL == CU_add_test(vector_suite, "test of vector_free", test_vector_free)) || 
         (NULL == CU_add_test(vector_suite, "test of vector_length", test_vector_length)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_push", test_vector_push)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_pop", test_vector_pop)) ||
@@ -56,8 +57,7 @@ int main() {
         (NULL == CU_add_test(vector_suite, "test of vector_get", test_vector_get)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_remove", test_vector_remove)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_insert", test_vector_insert)) ||
-        (NULL == CU_add_test(vector_suite, "test of vector_empty", test_vector_empty)) ||
-        (NULL == CU_add_test(vector_suite, "test of vector_free", test_vector_free)) || 
+        (NULL == CU_add_test(vector_suite, "test of vector_empty", test_vector_empty)) ||   
         (NULL == CU_add_test(vector_suite, "test of vector_map", test_vector_map)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_filter", test_vector_filter)))
     {
