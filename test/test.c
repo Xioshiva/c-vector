@@ -1,3 +1,5 @@
+#include "test_filter_functions.h"
+#include "test_map_functions.h"
 #include "test_vector.h"
 #include <stdio.h>
 #include "CUnit/Basic.h"
@@ -6,9 +8,37 @@
 int main() {
 
     CU_pSuite vector_suite = NULL;
+    CU_pSuite filter_suite = NULL;
+    CU_pSuite map_suite = NULL;
 
     /* initialize the CUnit test registry */
     if (CUE_SUCCESS != CU_initialize_registry()) return CU_get_error();
+
+    /* add a suite to the registry */
+    filter_suite = CU_add_suite("Filter suite", NULL, NULL);
+    if (NULL == filter_suite) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if ((NULL == CU_add_test(filter_suite, "test of is_even", test_is_even)))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    /* add a suite to the registry */
+    map_suite = CU_add_suite("Map suite", NULL, NULL);
+    if (NULL == map_suite) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if ((NULL == CU_add_test(map_suite, "test of square", test_square)))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
     /* add a suite to the registry */
     vector_suite = CU_add_suite("Vector suite", NULL, NULL);
@@ -27,7 +57,9 @@ int main() {
         (NULL == CU_add_test(vector_suite, "test of vector_remove", test_vector_remove)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_insert", test_vector_insert)) ||
         (NULL == CU_add_test(vector_suite, "test of vector_empty", test_vector_empty)) ||
-        (NULL == CU_add_test(vector_suite, "test of vector_free", test_vector_free)))
+        (NULL == CU_add_test(vector_suite, "test of vector_free", test_vector_free)) || 
+        (NULL == CU_add_test(vector_suite, "test of vector_map", test_vector_map)) ||
+        (NULL == CU_add_test(vector_suite, "test of vector_filter", test_vector_filter)))
     {
         CU_cleanup_registry();
         return CU_get_error();

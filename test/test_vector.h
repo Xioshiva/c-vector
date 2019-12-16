@@ -12,7 +12,7 @@ void test_vector_remove();
 void test_vector_insert();
 void test_vector_empty();
 void test_vector_free();
-// void test_vector_map();
-// void test_vector_filter();
+void test_vector_map();
+void test_vector_filter();
 
 #endif

@@ -15,7 +15,7 @@ vector.o: vector.c vector.h error.h error.c
 error.o: error.c error.h
 	$(CC) -c $< $(CFLAGS) $(CFLAGS_ASAN)
 
-compile_test: vector.o error.o test/test_vector.c
+compile_test: vector.o error.o filter_functions.o map_functions.o test/test_vector.c test/test_filter_functions.o test/test_map_functions.o
 	$(CC) test/test.c $^ -o test/test $(LIBS) $(CFLAGS) $(CFLAGS_ASAN) -lcunit
 
 test: compile_test
