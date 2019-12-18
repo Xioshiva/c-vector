@@ -31,7 +31,4 @@ error_code vector_filter(vector *v, bool (*f)(type), vector *rhs); // filter v w
 
 void vector_print_int(vector *v);
 
-type square(type element);
-bool is_even(type element);
-
 #endif
